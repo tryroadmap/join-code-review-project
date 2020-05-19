@@ -1,0 +1,63 @@
+
+
+```{r}
+fit <- lm(mpg ~ hp + wt, data = mtcars)
+summary(fit)
+```
+
+```{r}
+# ordered according to jtools/ssum
+library(jtools)
+library(sandwich)
+summ(fit)
+```
+
+```{r}
+summ(fit, scale = TRUE, vifs = TRUE, part.corr = TRUE, confint = TRUE, pvals = FALSE)
+```
+Watch for Cluster robost standard error.
+
+
+
+```{r}
+fit <- lm(mpg ~ hp + wt, data = mtcars)
+fit_b <- lm(mpg ~ hp + wt + disp, data = mtcars)
+fit_c <- lm(mpg ~ hp + wt + disp + drat, data = mtcars)
+coef_names <- c("Horsepower" = "hp", "Weight (tons)" = "wt",
+                "Displacement" = "disp", "Rear axle ratio" = "drat",
+                "Constant" = "(Intercept)")
+export_summs(fit, fit_b, fit_c, scale = TRUE, transform.response = TRUE, coefs = coef_names)
+```
+
+```{r}
+coef_names <- coef_names[1:4] # Dropping intercept for plots
+plot_summs(fit, fit_b, fit_c, scale = TRUE, coefs = coef_names)
+```
+
+```{r}
+plot_summs(fit_c, scale = TRUE, robust = "HC3", coefs = coef_names, plot.distributions = TRUE)
+
+```
+
+```{r}
+fiti <- lm(mpg ~ hp * wt, data = mtcars)
+sim_slopes(fiti, pred = hp, modx = wt, jnplot = TRUE)
+```
+
+```{r}
+interact_plot(fiti, pred = hp, modx = wt, interval = TRUE)
+
+```
+
+```{r}
+interact_plot(fiti, pred = hp, modx = wt, plot.points = TRUE)
+
+
+```
+
+
+```{r}
+fitiris <- lm(Petal.Length ~ Petal.Width * Species, data = iris)
+interact_plot(fitiris, pred = Petal.Width, modx = Species, plot.points = TRUE)
+```
+
